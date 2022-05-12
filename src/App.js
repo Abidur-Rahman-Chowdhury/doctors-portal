@@ -6,20 +6,27 @@ import About from './Pages/About/About';
 import Login from './Pages/Login/Login';
 import Appointment from './Pages/Appointment/Appointment';
 import SignUp from './Pages/Login/SignUp';
+import RequiredAuth from './Pages/Login/RequiredAuth';
 
 function App() {
   return (
-    <div >
+    <div>
       <Navbar></Navbar>
       <Routes>
-        <Route path='/' element={<Home></Home>}></Route>
-        <Route path='/home' element={<Home></Home>}></Route>
-        <Route path='/about' element={<About></About>}></Route>
-        <Route path='/login' element={<Login></Login>}></Route>
-        <Route path='/signup' element={<SignUp></SignUp>}></Route>
-        <Route path='/appointment' element={<Appointment></Appointment>}></Route>
+        <Route path="/" element={<Home></Home>}></Route>
+        <Route path="/home" element={<Home></Home>}></Route>
+        <Route path="/about" element={<About></About>}></Route>
+        <Route path="/login" element={<Login></Login>}></Route>
+        <Route path="/signup" element={<SignUp></SignUp>}></Route>
+        <Route
+          path="/appointment"
+          element={
+            <RequiredAuth>
+              <Appointment></Appointment>
+            </RequiredAuth>
+          }
+        ></Route>
       </Routes>
-     
     </div>
   );
 }
