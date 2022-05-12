@@ -1,46 +1,75 @@
+import { async } from '@firebase/util';
 import React from 'react';
-import auth from '../../firebase.init';
+import { useCreateUserWithEmailAndPassword,  useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
 import { useForm } from 'react-hook-form';
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { Link, useNavigate } from 'react-router-dom';
+import auth from '../../firebase.init';
 import Loading from '../Shared/Loading';
-import { Link } from 'react-router-dom';
 
-const Login = () => {
-  const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
-  const [
-    signInWithEmailAndPassword,
-    user1,
-    loading1,
-    error1,
-  ] = useSignInWithEmailAndPassword(auth);
+const Signup = () => {
+    const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
+    const [
+        createUserWithEmailAndPassword,
+        user1,
+        loading1,
+        error1,
+    ] = useCreateUserWithEmailAndPassword(auth);
+    const [updateProfile, updating, error3] = useUpdateProfile(auth);
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const onSubmit = (data) => {
-    console.log(data.email);
-    signInWithEmailAndPassword(data.email, data.password);
-  };
+  const onSubmit = async (data) => {
+     
+      await createUserWithEmailAndPassword(data.email, data.password);
+      await updateProfile({ displayName:data.name  });
+      navigate('/appointment')
+
+    
+    };
+    const navigate = useNavigate()
   let signInError;
 
   if ( loading || loading1) {
      return <Loading></Loading>
   }
-  if (error1 || error) {
-    signInError = <p className='text-red-500'>{ error1?.message || error?.message }</p>
+  if (error1 || error|| error3) {
+    signInError = <p className='text-red-500'>{ error1?.message || error?.message || error3?.message }</p>
   }
   
     if (user || user1 ) {
     console.log(user);
   }
-  return (
-    <div className="flex justify-center items-center h-screen">
+    return (
+        <div className="flex justify-center items-center h-screen">
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
-          <h2 className="text-center text-2xl font-bold">Login</h2>
+          <h2 className="text-center text-2xl font-bold">Sign Up</h2>
           <form onSubmit={handleSubmit(onSubmit)}>
 
+            <div className="form-control w-full max-w-xs">
+              <label className="label">
+                <span className="label-text">Name</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Your Name"
+                className="input input-bordered w-full max-w-xs"
+                {...register('name', {
+                  required: {
+                    value: true,
+                    message: 'Name is required'
+                  },
+                   
+                  })}
+              />
+              <label className="label">
+                {errors.name?.type === 'required' && <span className="label-text-alt text-red-500">{ errors.name.message}</span>}
+                
+               
+              </label>
+            </div>
             <div className="form-control w-full max-w-xs">
               <label className="label">
                 <span className="label-text">Email</span>
@@ -93,9 +122,9 @@ const Login = () => {
             </div>
 
            {signInError}
-            <input className='btn w-full max-w-xs uppercase text-white' type="submit" value='Login'  />
+            <input className='btn w-full max-w-xs uppercase text-white' type="submit" value='Sign Up'  />
           </form>
-          <p><small>New to Doctors Portal <Link className='text-secondary' to='/signup'>Create New Account</Link></small></p>
+          <p><small>Already have an account? <Link className='text-secondary' to='/login'>Please Login  </Link></small></p>
           <div className="divider">OR</div>
           <button
             className="btn btn-outline"
@@ -106,7 +135,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  );
+    );
 };
 
-export default Login;
+export default Signup;
