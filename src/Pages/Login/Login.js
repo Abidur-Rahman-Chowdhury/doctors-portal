@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import auth from '../../firebase.init';
 import { useForm } from 'react-hook-form';
 import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
@@ -25,6 +25,12 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   let from = location.state?.from?.pathname || "/";
+  useEffect(() => {
+    if (user || user1) {
+      navigate(from, { replace: true });
+     
+    }
+  },[user,user1,from,navigate])
   let signInError;
 
   if ( loading || loading1) {
@@ -34,10 +40,7 @@ const Login = () => {
     signInError = <p className='text-red-500'>{ error1?.message || error?.message }</p>
   }
   
-  if (user || user1) {
-    navigate(from, { replace: true });
-    console.log(user);
-  }
+  
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="card w-96 bg-base-100 shadow-xl">

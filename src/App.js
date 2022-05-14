@@ -7,6 +7,9 @@ import Login from './Pages/Login/Login';
 import Appointment from './Pages/Appointment/Appointment';
 import SignUp from './Pages/Login/SignUp';
 import RequiredAuth from './Pages/Login/RequiredAuth';
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -27,6 +30,7 @@ function App() {
           }
         ></Route>
       </Routes>
+      <ToastContainer></ToastContainer>
     </div>
   );
 }

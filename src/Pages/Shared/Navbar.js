@@ -27,10 +27,10 @@ const Navbar = () => {
         <Link to="/about">About</Link>
       </li>
       <li>
-        {user ? <Link onClick={() => {
+        {user ? <span onClick={() => {
           signOut(auth);
           navigate('/login')
-        }} to="">Sign Out</Link>
+        }} >Sign Out</span>
         : <Link to="/login">Login</Link>}
       </li>
     </>
