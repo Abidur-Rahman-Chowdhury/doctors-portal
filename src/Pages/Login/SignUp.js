@@ -1,9 +1,10 @@
 import { async } from '@firebase/util';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useCreateUserWithEmailAndPassword,  useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import auth from '../../firebase.init';
+import useToken from '../../hooks/useToken';
 import Loading from '../Shared/Loading';
 
 const Signup = () => {
@@ -13,8 +14,18 @@ const Signup = () => {
         user1,
         loading1,
         error1,
-    ] = useCreateUserWithEmailAndPassword(auth);
-    const [updateProfile, updating, error3] = useUpdateProfile(auth);
+  ] = useCreateUserWithEmailAndPassword(auth);
+ 
+  const [updateProfile, updating, error3] = useUpdateProfile(auth);
+  const [token] = useToken(user || user1);
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (token) {
+      navigate('/appointment')
+     
+    }
+  },[token,navigate])
+  
   const {
     register,
     formState: { errors },
@@ -24,11 +35,11 @@ const Signup = () => {
      
       await createUserWithEmailAndPassword(data.email, data.password);
       await updateProfile({ displayName:data.name  });
-      navigate('/appointment')
+      
 
     
     };
-    const navigate = useNavigate()
+    
   let signInError;
 
   if ( loading || loading1) {
@@ -38,11 +49,10 @@ const Signup = () => {
     signInError = <p className='text-red-500'>{ error1?.message || error?.message || error3?.message }</p>
   }
   
-    if (user || user1 ) {
-    console.log(user);
-  }
+
+   
     return (
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex justify-center items-center h-screen ">
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
           <h2 className="text-center text-2xl font-bold">Sign Up</h2>
