@@ -21,7 +21,7 @@ const Login = () => {
     handleSubmit,
   } = useForm();
   const onSubmit = (data) => {
-    console.log(data.email);
+   
     signInWithEmailAndPassword(data.email, data.password);
   };
   const navigate = useNavigate();
