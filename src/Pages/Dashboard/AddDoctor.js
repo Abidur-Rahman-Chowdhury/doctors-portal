@@ -54,10 +54,10 @@ const AddDoctor = () => {
                         .then(res => res.json())
                         .then(inserted => {
                             if (inserted.insertedId) {
-                                toast.success('Doctor successfully added.');
-                                reset();
+                                toast.success('Doctor successfully added.')
+                                reset()
                             } else {
-                                toast.error('Failed to added the doctor.');
+                                toast.error('Failed to added the doctor.')
                             }
                         
                     })
