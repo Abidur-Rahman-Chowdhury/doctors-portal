@@ -2,11 +2,14 @@ import id from 'date-fns/esm/locale/id/index.js';
 import { signOut } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import auth from '../../firebase.init';
 
 const MyAppointments = () => {
   const [appointments, setAppointments] = useState([]);
+  if (appointments) {
+    console.log(appointments);
+  }
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
   useEffect(() => {
@@ -26,10 +29,12 @@ const MyAppointments = () => {
           return res.json();
         })
         .then((data) => {
+          
           setAppointments(data);
         });
     }
   }, [user]);
+  
   return (
     <div>
       <h2>My Appointments: {appointments.length}</h2>
@@ -41,7 +46,8 @@ const MyAppointments = () => {
               <th>Name</th>
               <th>Date</th>
               <th>Time</th>
-              <th>Treatement</th>
+              <th>Treatment</th>
+              <th>Payment</th>
             </tr>
           </thead>
           <tbody>
@@ -52,6 +58,10 @@ const MyAppointments = () => {
                 <td>{a.date}</td>
                 <td>{a.slot}</td>
                 <td>{a.treatment}</td>
+                <td>
+                  {(a.price && !a.paid) && <Link to={`/dashboard/payment/${a._id}`}><button className='btn btn-xs btn-success '>Pay</button></Link>}
+                  {(a.price && a.paid) && <span className=' text-success '>Paid</span>}
+                </td>
               </tr>
             ))}
           </tbody>
